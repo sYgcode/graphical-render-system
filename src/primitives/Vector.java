@@ -1,4 +1,4 @@
-package premitives;
+package primitives;
 
 /**
  * the class represents a Vector in the 3d Cartesian coordinate system and inherits from the {@link class}.

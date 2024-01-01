@@ -1,10 +1,12 @@
-package premitives;
+package primitives;
 
 /**
  * This class will represent a point in the 3d space.
  * @author Yishua GOlubtchik & Yair Yaha
  */
 public class Point {
+
+    public static final Point ZERO = new Point(Double3.ZERO);
     protected final Double3 xyz;
 
     /**
@@ -25,11 +27,6 @@ public class Point {
         xyz = new Double3(d1, d2, d3);
     }
 
-    /**
-     * this function overrides the equals function and allows us to use the equals function for Point.
-     * @param obj  passed object to assign to our instance.
-     * @return returns the new object
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -37,13 +34,28 @@ public class Point {
                 && this.xyz.equals(other.xyz);
     }
 
-    /**
-     * this function overrides the toString function
-     * @return returns the double3 in String format (d1, d2, d3)
-     */
     @Override
     public String toString() {
         return xyz.toString();
+    }
+
+    public Vector subtract (Point point) {
+        return new Vector(xyz.subtract(point.xyz));
+    }
+
+    public Point add (Vector vector){
+        return new Point(xyz.add(vector.xyz));
+    }
+
+    public double distanceSquared(Point point){
+        // (x1-x2)^2 + (y1 - y2)^2 + (z1 - z2)^2
+        return ((xyz.d1 - point.xyz.d1)* (xyz.d1 - point.xyz.d1)
+                + (xyz.d2 - point.xyz.d2)* (xyz.d2 - point.xyz.d2)
+                + (xyz.d3 - point.xyz.d3)* (xyz.d3 - point.xyz.d3));
+    }
+
+    public double distance(Point point){
+        return Math.sqrt(distanceSquared(point));
     }
 
 }
