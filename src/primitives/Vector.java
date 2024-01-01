@@ -3,6 +3,7 @@ package primitives;
 /**
  * the class represents a Vector in the 3d Cartesian coordinate system and inherits from the {@link class}.
  * the Vector always originates from the (0, 0, 0) point.
+ * @author Yishua Golubtchik & Yair Yahav
  */
 public class Vector extends Point {
     /**

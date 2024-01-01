@@ -2,11 +2,16 @@ package primitives;
 
 /**
  * This class will represent a point in the 3d space.
- * @author Yishua GOlubtchik & Yair Yaha
+ * @author Yishua Golubtchik & Yair Yahav
  */
 public class Point {
-
+    /**
+     * ZERO Point
+     */
     public static final Point ZERO = new Point(Double3.ZERO);
+    /**
+     * Double3 to hold Point variables
+     */
     protected final Double3 xyz;
 
     /**
@@ -39,14 +44,29 @@ public class Point {
         return xyz.toString();
     }
 
+    /**
+     * subtract a new point from our current point
+     * @param point passed point to subtract from our point
+     * @return returns a vector from the second point to our point
+     */
     public Vector subtract (Point point) {
         return new Vector(xyz.subtract(point.xyz));
     }
 
+    /**
+     * adds a vector to our point
+     * @param vector vector to add to our point
+     * @return returns the new point
+     */
     public Point add (Vector vector){
         return new Point(xyz.add(vector.xyz));
     }
 
+    /**
+     * calculates the squared distance between our point to another point
+     * @param point the point to calculate the distance from our point from
+     * @return returns the squared distance between the 2 points as a double
+     */
     public double distanceSquared(Point point){
         // (x1-x2)^2 + (y1 - y2)^2 + (z1 - z2)^2
         return ((xyz.d1 - point.xyz.d1)* (xyz.d1 - point.xyz.d1)
@@ -54,6 +74,11 @@ public class Point {
                 + (xyz.d3 - point.xyz.d3)* (xyz.d3 - point.xyz.d3));
     }
 
+    /**
+     * calculates the distance between our point and another point
+     * @param point the point to calculate the distance from our point from
+     * @return returns the distance between the 2 points as a double
+     */
     public double distance(Point point){
         return Math.sqrt(distanceSquared(point));
     }

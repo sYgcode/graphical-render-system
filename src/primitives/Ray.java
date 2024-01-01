@@ -2,6 +2,7 @@ package primitives;
 
 /**
  * Ray made up out of a Point representing the head and a Vector representing the direction.
+ * @author Yishua Golubtchik & Yair Yahav
  */
 public class Ray {
     /**
