@@ -13,7 +13,7 @@ public abstract class RadialGeometry extends Geometry{
      * constructor to initialize the radius
      * @param radius the value to initialize the radius to
      */
-    protected RadialGeometry(double radius){
+    public RadialGeometry(double radius){
         this.radius = radius;
     }
 }

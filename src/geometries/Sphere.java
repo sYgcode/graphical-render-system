@@ -10,15 +10,21 @@ public class Sphere extends RadialGeometry{
     /**
      * Point to represent center of Sphere
      */
-    protected Point center;
+    private final Point center;
 
     /**
-     * function to calculate normal (vertical) vector from the given point
-     * @param point certain point on the surface of the object to calculate the normal from
-     * @return returns the normal vector
+     * constructor to initialize Tube
+     * @param center center point to initialize to
+     * @param radius radius to initialize to
      */
+    public Sphere(Point center, double radius){
+        super(radius);
+        this.center = center;
+    }
+
+
     @Override
-    Vector getNormal(Point point) {
+    public Vector getNormal(Point point) {
         return null;
     }
 }

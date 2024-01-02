@@ -12,5 +12,5 @@ public abstract class Geometry {
      * @param point certain point on the surface of the object to calculate the normal from
      * @return returns the normal vector
      */
-    abstract Vector getNormal(Point point);
+    public abstract Vector getNormal(Point point);
 }

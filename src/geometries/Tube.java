@@ -8,15 +8,21 @@ public class Tube extends RadialGeometry{
     /**
      * Ray to represent the axis of the tube
      */
-    protected Ray axis;
+    protected final Ray axis;
 
     /**
-     * function to calculate normal (vertical) vector from the given point
-     * @param point certain point on the surface of the object to calculate the normal from
-     * @return returns the normal vector
+     * constructor to initialize Tube
+     * @param axis axis to initialize to
+     * @param radius radius to initialize to
      */
+    protected Tube(Ray axis, double radius){
+        super(radius);
+        this.axis = axis;
+    }
+
+
     @Override
-    Vector getNormal(Point point){
+    public Vector getNormal(Point point){
         return null;
     }
 }

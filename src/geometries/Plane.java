@@ -10,11 +10,11 @@ public class Plane extends Geometry{
     /**
      * point for reference
      */
-    protected Point q;
+    private final Point q;
     /**
      * normal to the plane
      */
-    protected Vector normal;
+    private final Vector normal;
 
     /**
      * constructor to find normal based on 3 points and save a reference point
@@ -32,7 +32,7 @@ public class Plane extends Geometry{
      * @param q point of reference
      * @param normal normal vector (doesn't need to be normalized)
      */
-    protected Plane(Point q, Vector normal){
+    public Plane(Point q, Vector normal){
         this.q = q;
         this.normal = normal.normalize();
     }
@@ -41,20 +41,15 @@ public class Plane extends Geometry{
      * function to find the normal vector of the plane
      * @return the normal vector of the plane
      */
-    protected Vector getNormal(){
+    public Vector getNormal(){
         // from my understanding don't implement the function yet
-        return null;
+        return normal;
     }
 
-    /**
-     * function to find the normal vector of the plane using the passed point
-     * @param point certain point on the surface of the object to calculate the normal from
-     * @return the normal vector of the plane
-     */
     @Override
-    protected Vector getNormal(Point point){
+    public Vector getNormal(Point point){
         // from my understanding don't implement the function yet
-        return null;
+        return normal;
     }
 
 }
