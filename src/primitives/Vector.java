@@ -37,10 +37,10 @@ public class Vector extends Point {
                 && this.xyz.equals(other.xyz);
     }
 
-//    @Override
-//    public String toString(){
-//        return xyz.toString();
-//    }
+    @Override
+    public String toString(){
+        return ("V: " + xyz.toString());
+    }
 
     /**
      * performs addition with this vector and another one
