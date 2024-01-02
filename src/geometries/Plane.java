@@ -11,6 +11,7 @@ public class Plane extends Geometry{
      * point for reference
      */
     private final Point q;
+
     /**
      * normal to the plane
      */
