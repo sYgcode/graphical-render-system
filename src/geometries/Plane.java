@@ -25,7 +25,7 @@ public class Plane extends Geometry{
      */
     protected Plane(Point p1,Point p2,Point p3){
         q = p1;
-        normal = getNormal(p1);
+        normal = null;
     }
 
     /**
