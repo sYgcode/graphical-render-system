@@ -35,9 +35,9 @@ class PointTests {
         // ============ Equivalence Partitions Tests ==============
         //TC01 tests if addition is working correctly
         assertEquals(p1.add(v1), p2, "ERROR: (point + vector) = other point does not work correctly");
-        // =============== Boundary Values Tests ==================
-        //TC11 checks center of coordinates using addition
+        //TC02 checks center of coordinates using addition
         assertEquals(p1.add(v1Opposite), Point.ZERO, "ERROR: (point + vector) = center of coordinates does not work correctly");
+        // =============== Boundary Values Tests ==================
 
     }
     /** Test method for {@link Point#distanceSquared(Point)}. */

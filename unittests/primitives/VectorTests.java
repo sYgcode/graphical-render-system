@@ -46,7 +46,7 @@ class VectorTests {
         Vector v1 = new Vector(1, 2, 3);
         Vector v2 = new Vector(-2, -4, -6);
         // ============ Equivalence Partitions Tests ==============
-        //TC01
+        //TC01 checks subtraction
         assertEquals(v1.subtract(v2), new Vector(3, 6, 9), "ERROR: Vector - Vector does not work correctly");
         // =============== Boundary Values Tests ==================
         //TC11 tests creating a zero vector through subtraction
@@ -102,9 +102,10 @@ class VectorTests {
     void testLength() {
         Vector v4 = new Vector(1, 2, 2);
         // ============ Equivalence Partitions Tests ==============
-        // =============== Boundary Values Tests ==================
-        //TC11 checks length
+        //TC01 checks length
         assertTrue(isZero(v4.length() - 3), "ERROR: length() wrong value");
+        // =============== Boundary Values Tests ==================
+
     }
 
     /** Test method for {@link Vector#normalize()}. */
@@ -114,9 +115,10 @@ class VectorTests {
         Vector u = v.normalize();
 
         // ============ Equivalence Partitions Tests ==============
-        // =============== Boundary Values Tests ==================
-        //TC11 checks if normalization works
+        //TC01 checks if normalization works
         assertTrue(isZero(u.length() - 1), "ERROR: the normalized vector is not parallel to the original one");
+
+        // =============== Boundary Values Tests ==================
         //TC12 test that the vectors are co-lined
         assertThrows(IllegalArgumentException.class, () -> v.crossProduct(u), "ERROR: the normalized vector is not parallel to the original one");
         assertTrue((v.dotProduct(u) >= 0), "ERROR: the normalized vector is opposite to the original one");
