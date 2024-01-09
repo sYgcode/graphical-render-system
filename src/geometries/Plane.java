@@ -25,7 +25,7 @@ public class Plane extends Geometry{
      */
     protected Plane(Point p1,Point p2,Point p3){
         q = p1;
-        normal = null;
+        normal = (p2.subtract(p1)).crossProduct(p3.subtract(p1)).normalize();
     }
 
     /**
@@ -49,7 +49,6 @@ public class Plane extends Geometry{
 
     @Override
     public Vector getNormal(Point point){
-        // from my understanding don't implement the function yet
         return normal;
     }
 
