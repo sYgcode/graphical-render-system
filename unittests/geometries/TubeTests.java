@@ -33,6 +33,6 @@ class TubeTests {
 
         // =============== Boundary Values Tests ==================
         //TC11 checks if (p-p0) is orthogonal to dir
-        assertThrows( IllegalArgumentException.class, () -> tube.getNormal(p2), "ERROR: no error thrown when (P-P0) is orthogonal to dir or wrong error thrown");
+        assertEquals(p2, tube.getNormal(p2), "ERROR: didn't return (p-p0) if it was orthogonal to dir");
     }
 }
