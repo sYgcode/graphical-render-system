@@ -1,7 +1,10 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  * flat plane at a certain point
@@ -50,6 +53,11 @@ public class Plane extends Geometry{
     @Override
     public Vector getNormal(Point point){
         return normal;
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray){
+        return null;
     }
 
 }
