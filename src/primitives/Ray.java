@@ -1,4 +1,5 @@
 package primitives;
+import static primitives.Util.*;
 
 /**
  * Ray made up out of a Point representing the head and a Vector representing the direction.
@@ -38,6 +39,14 @@ public class Ray {
     public String toString (){
         return ("head: " + head.toString()
                 + " direction: " + direction.toString());
+    }
+
+    // returns P=p0 +tv
+    public Point getPoint(double t) {
+        if ((isZero(t))){
+            return head;
+        }
+        return head.add(direction.scale(t));
     }
 
 

@@ -6,6 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.*;
+
 /**
  * flat plane at a certain point
  */
@@ -57,7 +59,34 @@ public class Plane extends Geometry{
 
     @Override
     public List<Point> findIntersections(Ray ray){
-        return null;
+        Point p0 = ray.head;
+        Vector v = ray.direction;
+        Vector n = normal;
+        double nv = alignZero(n.dotProduct(v));
+
+        if(isZero(nv)){
+            return null;
+        }
+        // ray can't start from plane
+        if(p0.equals(q)){
+            return null;
+        }
+        Vector p0_q = q.subtract((p0));
+        double np0_q = alignZero(n.dotProduct(p0_q));
+
+        // ray parallel to plane
+        if(isZero(np0_q)) {
+            return null;
+        }
+
+        double t = alignZero((np0_q/nv));
+
+        if (t<0){
+            return null;
+        }
+
+        // after checking BVA's return
+        return List.of(ray.getPoint(t));
     }
 
 }

@@ -6,6 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.*;
+
 /**
  * Sphere class, inherits from radial geometry. contains radius and center point
  */
@@ -34,6 +36,34 @@ public class Sphere extends RadialGeometry{
 
     @Override
     public List<Point> findIntersections(Ray ray){
+        Point rayHead = ray.head;
+        Vector v = ray.direction;
+        if(rayHead.equals(center)) {
+            return List.of(ray.getPoint(radius));
+        }
+        Vector u = center.subtract(rayHead);
+        double tm = alignZero(v.dotProduct(u));
+        double d = Math.sqrt(alignZero(u.lengthSquared()-tm*tm));
+        if(d>=radius){
+            // no intersections
+            return null;
+        }
+        double th = Math.sqrt(alignZero(radius*radius-d*d));
+        double t1 = alignZero(tm + th);
+        double t2 = alignZero(tm - th);
+
+        if(t1 <= 0 && t2 <= 0){
+            return null;
+        }
+        else if (t1 > 0 && t2 <= 0){
+            return List.of(ray.getPoint(t1));
+        }
+        else if(t2 > 0 && t1 <= 0){
+            return List.of(ray.getPoint(t2));
+        }
+        else if(t2>0 && t1 > 0){
+            return List.of(ray.getPoint(t1), ray.getPoint(t2));
+        }
         return null;
     }
 }
