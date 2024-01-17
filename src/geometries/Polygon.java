@@ -2,6 +2,7 @@ package geometries;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 import primitives.Point;
@@ -85,7 +86,41 @@ public class Polygon extends Geometry {
 
    @Override
    public List<Point> findIntersections(Ray ray){
-      return null;
+      // check with plane first
+      List<Point> planeIntersections = plane.findIntersections(ray);
+      if (planeIntersections == null)
+         return null;
+
+      Point p0 = ray.head;
+      Vector v = ray.direction;
+
+      Vector v1 = vertices.get(0).subtract(p0);
+      Vector v2 = vertices.get(1).subtract(p0);
+
+      double a = alignZero(v.dotProduct(v2.crossProduct(v1)));
+      double[] allA = new double[vertices.size()];
+      allA[0] = a;
+      boolean isPositive = a > 0;
+
+      if(isZero(a)){
+         return null;
+      }
+
+      //loop to iterate over everything
+      for(int i = 0; i < vertices.size(); i++){
+         v1 = vertices.get(i).subtract();
+
+         a = alignZero(v.dotProduct(v2.crossProduct(v1)));
+
+         if(isZero(a)){
+            return null;
+         }
+         if(isPositive!=(a>0)){
+            return null;
+         }
+      }
+      return List.of(planeIntersections.getFirst());
+
    }
 
 }

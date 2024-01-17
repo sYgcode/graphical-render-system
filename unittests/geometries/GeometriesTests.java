@@ -26,7 +26,7 @@ public class GeometriesTests {
         Sphere sphere1 = new Sphere(new Point(0,4,0), 1);
         Geometries geometries = new Geometries(plane1, triangle1, sphere1);
         // ============ Equivalence Partitions Tests ==============
-        //TC01
+        //TC01 goes through some but not all
         assertEquals(3, geometries.findIntersections(ray).size(), "ERROR: wrong amount of points");
         // =============== Boundary Values Tests ==================
         ray = new Ray(new Point(0,-3,0), new Vector(0,0,1));
