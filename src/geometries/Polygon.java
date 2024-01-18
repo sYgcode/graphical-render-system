@@ -88,39 +88,47 @@ public class Polygon extends Geometry {
    public List<Point> findIntersections(Ray ray){
       // check with plane first
       List<Point> planeIntersections = plane.findIntersections(ray);
-      if (planeIntersections == null)
-         return null;
 
-      Point p0 = ray.head;
+      //check if there are any intersections on the plane
+      if (planeIntersections == null) {
+         return null;
+      }
+
+      // get head and dir
+      Point P0 = ray.head;
       Vector v = ray.direction;
 
-      Vector v1 = vertices.get(0).subtract(p0);
-      Vector v2 = vertices.get(1).subtract(p0);
+      // get starting vectors like with triangle
+      Vector v1 = P0.subtract(vertices.get(0));
+      Vector v2 = P0.subtract(vertices.get(1));
 
-      double a = alignZero(v.dotProduct(v2.crossProduct(v1)));
-      double[] allA = new double[vertices.size()];
-      allA[0] = a;
-      boolean isPositive = a > 0;
+      double sign = alignZero(v.dotProduct(v2.crossProduct(v1)));
 
-      if(isZero(a)){
+      // in this case there are 0 points
+      if (isZero(sign)) {
          return null;
       }
 
-      //loop to iterate over everything
-      for(int i = 0; i < vertices.size(); i++){
-         v1 = vertices.get(i).subtract();
+      //beginning sign (positive/negative)
+      boolean positive = sign > 0;
 
-         a = alignZero(v.dotProduct(v2.crossProduct(v1)));
+      //iterate through all vertices of the polygon (start from 2 because we already did 0 and 1
+      for (int i = 2; i < vertices.size(); i++) {
+         v2 = v1;
+         v1 = P0.subtract(vertices.get(i));
 
-         if(isZero(a)){
+         sign = alignZero(v.dotProduct(v2.crossProduct(v1)));
+         if (isZero(sign)) {
             return null;
          }
-         if(isPositive!=(a>0)){
+
+         if (positive != (sign > 0)) {
             return null;
          }
       }
-      return List.of(planeIntersections.getFirst());
+      Point point = planeIntersections.getFirst();
 
+      return List.of(point);
    }
 
 }
