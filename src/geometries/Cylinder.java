@@ -4,6 +4,9 @@ import primitives.Point;
 import primitives.Vector;
 import primitives.Ray;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * cylinder class, represents non infinite tube, inherits from tube
  */
@@ -27,6 +30,25 @@ public class Cylinder extends Tube{
 
     @Override
     public Vector getNormal(Point point){
-        return null;
+        Point p0 = axis.head;
+        Vector v = axis.direction;
+        double t = 0
+                ;
+        //check tube BVA P-p0
+        try {
+            t = alignZero(point.subtract(p0).dotProduct(v));
+        }
+        catch (IllegalArgumentException e) {
+            return v;
+        }
+
+        //check if the point is at the base
+        if(isZero(t) || isZero(height-t)){
+            return v;
+        }
+
+        // reassign p0 so dont need to create new obj
+        p0 = p0.add(v.scale(t));
+        return point.subtract(p0).normalize();
     }
 }
