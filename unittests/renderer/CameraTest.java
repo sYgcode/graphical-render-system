@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import primitives.*;
 import renderer.*;
-import scene.Scene;
+//import scene.Scene;
 
 /**
  * Testing Camera Class
@@ -14,12 +14,10 @@ import scene.Scene;
  */
 class CameraTest {
    /** Camera builder for the tests */
-//   private final Camera.Builder cameraBuilder = Camera.getBuilder()
-//      .setRayTracer(new SimpleRayTracer(new Scene("Test")))
-//      .setImageWriter(new ImageWriter("Test", 1, 1))
-//      .setLocation(Point.ZERO)
-//      .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
-//      .setVpDistance(10);
+   private final Camera.Builder cameraBuilder = new Camera.Builder().setLocation(Point.ZERO)
+           .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
+           .setVpDistance(10);;
+
 
    /**
     * Test method for
@@ -31,7 +29,8 @@ class CameraTest {
 
       // ============ Equivalence Partitions Tests ==============
       // EP01: 4X4 Inside (1,1)
-      Camera camera1 = Builder.setVpSize(8, 8).build();
+      Camera.Builder builder = cameraBuilder;
+      Camera camera1 = (builder.setVpSize(8, 8).build());
       assertEquals(new Ray(Point.ZERO, new Vector(1, -1, -10)),
                    camera1.constructRay(4, 4, 1, 1), badRay);
 
@@ -45,7 +44,7 @@ class CameraTest {
                    camera1.constructRay(4, 4, 1, 0), badRay);
 
       // BV03: 3X3 Center (1,1)
-      Camera camera2 = Builder.setVpSize(6, 6).build();
+      Camera camera2 = builder.setVpSize(6, 6).build();
       assertEquals(new Ray(Point.ZERO, new Vector(0, 0, -10)),
                    camera2.constructRay(3, 3, 1, 1), badRay);
 

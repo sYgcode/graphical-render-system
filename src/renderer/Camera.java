@@ -53,14 +53,32 @@ public class Camera implements Cloneable {
     public static Builder getBuilder (){return null;}
 
     /**
-     * constructs a ray
+     * constructs a ray through a pixel
      * @param nX row length
      * @param nY column height
      * @param j pixel index - column
      * @param i pixel index - row
      * @return null
      */
-    public Ray constructRay(int nX, int nY, int j, int i){return null;}
+    public Ray constructRay(int nX, int nY, int j, int i){
+        //Image Center
+        Point Pc = loc.add(Vto.scale(distance));
+
+        //Ratio width and height
+        double Ry = height/nY;
+        double Rx = width/nX;
+
+        //Pixel[i,j] center
+        double yI = -(i-(nY-1)/2.0)*Ry;
+        double xJ = (j-(nX-1)/2.0)*Rx;
+        Point Pij = Pc;
+        //make sure to account for Vector ZERO
+        if(xJ != 0) { Pij = Pij.add(Vright.scale(xJ));}
+        if(yI != 0) { Pij = Pij.add(Vup.scale(yI));}
+
+        Vector Vij = Pij.subtract(loc);
+        return new Ray(loc, Vij);
+    }
 
     @Override
     public Camera clone() {
