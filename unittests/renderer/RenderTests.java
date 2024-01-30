@@ -18,9 +18,9 @@ public class RenderTests {
    /** Camera builder of the tests */
    private final Camera.Builder camera = Camera.getBuilder()
       .setRayTracer(new SimpleRayTracer(scene))
-      .setLocation(Point.ZERO).setDirection(new Point(0, 0, -1), Vector.Y)
+      .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0,1,0))
       .setVpDistance(100)
-      .setVpSize(500, 500);
+      .setVpSize(1000, 1000);
 
    /** Produce a scene with basic 3D model and render it into a png image with a
     * grid */
@@ -38,27 +38,26 @@ public class RenderTests {
 
       // right
       camera
-         .setImageWriter(new ImageWriter("base render test", 1000, 1000))
-         .build()
-         .renderImage()
-         .printGrid(100, new Color(YELLOW))
-         .writeToImage();
+         .setImageWriter(new ImageWriter("base render test", 1000, 1000));
+         camera.build().renderImage();
+         camera.build().printGrid(100, new Color(YELLOW));
+         camera.build().writeToImage();
    }
 
    /** Test for XML based scene - for bonus */
-   @Test
-   public void basicRenderXml() {
-      // enter XML file name and parse from XML file into scene object
-      // using the code you added in appropriate packages
-      // ...
-      // NB: unit tests is not the correct place to put XML parsing code
-
-      camera
-         .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
-         .build()
-         .renderImage()
-         .printGrid(100, new Color(YELLOW))
-         .writeToImage();
-   }
+//   @Test
+//   public void basicRenderXml() {
+//      // enter XML file name and parse from XML file into scene object
+//      // using the code you added in appropriate packages
+//      // ...
+//      // NB: unit tests is not the correct place to put XML parsing code
+//
+//      camera
+//         .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
+//         .build()
+//         .renderImage()
+//         .printGrid(100, new Color(YELLOW))
+//         .writeToImage();
+//   }
 }
 

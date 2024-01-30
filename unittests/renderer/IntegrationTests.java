@@ -8,6 +8,7 @@ import geometries.Triangle;
 import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Vector;
+import scene.Scene;
 
 import java.nio.Buffer;
 import java.util.List;
@@ -29,7 +30,7 @@ public class IntegrationTests {
      */
     private int intersectAmount(Camera.Builder builder, Intersectable geometry){
         // build the camera with a view plane of 3x3 and distance of 1
-        Camera cam = builder.setVpSize(3,3).setVpDistance(1).build();
+        Camera cam = builder.setVpSize(3,3).setVpDistance(1).setImageWriter(new ImageWriter("test construct Ray", 500, 800)).setRayTracer(new SimpleRayTracer(new Scene("hi"))).build();
         // width
         int nX = 3;
         // height

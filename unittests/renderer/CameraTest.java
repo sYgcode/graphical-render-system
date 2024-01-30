@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import primitives.*;
 import renderer.*;
+import scene.Scene;
 //import scene.Scene;
 
 /**
@@ -16,7 +17,7 @@ class CameraTest {
    /** Camera builder for the tests */
    private final Camera.Builder cameraBuilder = new Camera.Builder().setLocation(Point.ZERO)
            .setDirection(new Vector(0, 0, -1), new Vector(0, -1, 0))
-           .setVpDistance(10);;
+           .setVpDistance(10).setImageWriter(new ImageWriter("test construct Ray", 500, 800)).setRayTracer(new SimpleRayTracer(new Scene("hi")));
 
 
    /**

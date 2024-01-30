@@ -1,5 +1,6 @@
 package renderer;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -29,6 +30,11 @@ public class Camera implements Cloneable {
     private double width = 0;
     private Point viewPlaneCenter;
 
+    /** imageWriter*/
+    private ImageWriter imageWriter;
+    /** */
+    private RayTracerBase rayTracer;
+
     /** @return Camera location*/
     public Point getLoc(){return loc;}
     /** @return Camera to direction vector*/
@@ -51,7 +57,7 @@ public class Camera implements Cloneable {
      * returns new Builder object
      * @return new Builder object
      */
-    public static Builder getBuilder (){return null;}
+    public static Builder getBuilder (){return new Builder();}
 
     /**
      * constructs a ray through a pixel
@@ -80,6 +86,57 @@ public class Camera implements Cloneable {
         return new Ray(loc, Vij);
     }
 
+    /**
+     * renders image
+     */
+    public void renderImage(){
+        //get nx and ny from image writer
+        int Nx = imageWriter.getNx();
+        int Ny = imageWriter.getNy();
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                this.castRay(Nx, Ny, i, j);
+            }
+        }
+    }
+
+    /**
+     * casts a ray from said pixel
+     * @param Nx amount of columns
+     * @param Ny amount of rows
+     * @param i index of column
+     * @param j index of row
+     */
+    private void castRay(int Nx, int Ny, int i, int j){
+        Ray ray = constructRay(Nx, Ny, i, j);
+        Color color = rayTracer.traceRay(ray);
+        imageWriter.writePixel(i, j, color);
+    }
+
+    /**
+     * creates a grid for the image writer
+     * @param interval interval for size of each square
+     * @param color color for grid to be in
+     */
+    public void printGrid(int interval, Color color){
+        int i, j;
+        for(i=0; i<width; i+=interval){
+            for(j=0; j<height; j++){
+                imageWriter.writePixel(i, j, color);
+            }
+        }
+        for(j=0; j<height; j+=interval){
+            for(i=0; i<width; i++){
+                imageWriter.writePixel(i, j, color);
+            }
+        }
+
+    }
+
+    /**
+     * writes to image
+     */
+    public void writeToImage(){imageWriter.writeToImage();}
     @Override
     public Camera clone() {
         try {
@@ -150,6 +207,26 @@ public class Camera implements Cloneable {
         }
 
         /**
+         * sets image writer object
+         * @param imageWriter image writer to set to
+         * @return this
+         */
+        public Builder setImageWriter(ImageWriter imageWriter){
+            camera.imageWriter = imageWriter;
+            return this;
+        }
+
+        /**
+         * sets camera's ray tracer
+         * @param rayTracer rayTracer to set to
+         * @return this
+         */
+        public Builder setRayTracer(RayTracerBase rayTracer){
+            camera.rayTracer = rayTracer;
+            return this;
+        }
+
+        /**
          * builds the camera and makes sure it is all initialized.
          * @return a finished camera object
          */
@@ -161,6 +238,8 @@ public class Camera implements Cloneable {
             if (isZero(camera.distance)){throw new MissingResourceException(errorPrefix, className, "distance" + errorSuffix);}
             if (isZero(camera.width)){throw new MissingResourceException(errorPrefix, className, "width" + errorSuffix);}
             if (isZero(camera.height)){throw new MissingResourceException(errorPrefix, className, "height" + errorSuffix);}
+            if (camera.imageWriter == null){throw new MissingResourceException(errorPrefix, className, "imageWriter" + errorSuffix);}
+            if (camera.rayTracer == null){throw new MissingResourceException(errorPrefix, className, "height" + errorSuffix);}
 
             // calculate Vright
             camera.Vright = camera.Vto.crossProduct(camera.Vup).normalize();
