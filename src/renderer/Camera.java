@@ -27,6 +27,7 @@ public class Camera implements Cloneable {
     private double distance = 0;
     /** width of view plane*/
     private double width = 0;
+    private Point viewPlaneCenter;
 
     /** @return Camera location*/
     public Point getLoc(){return loc;}
@@ -62,7 +63,6 @@ public class Camera implements Cloneable {
      */
     public Ray constructRay(int nX, int nY, int j, int i){
         //Image Center
-        Point Pc = loc.add(Vto.scale(distance));
 
         //Ratio width and height
         double Ry = height/nY;
@@ -71,7 +71,7 @@ public class Camera implements Cloneable {
         //Pixel[i,j] center
         double yI = -(i-(nY-1)/2.0)*Ry;
         double xJ = (j-(nX-1)/2.0)*Rx;
-        Point Pij = Pc;
+        Point Pij = viewPlaneCenter;
         //make sure to account for Vector ZERO
         if(xJ != 0) { Pij = Pij.add(Vright.scale(xJ));}
         if(yI != 0) { Pij = Pij.add(Vup.scale(yI));}
@@ -164,6 +164,7 @@ public class Camera implements Cloneable {
 
             // calculate Vright
             camera.Vright = camera.Vto.crossProduct(camera.Vup).normalize();
+            camera.viewPlaneCenter = camera.loc.add(camera.Vto.scale(camera.distance));
 
             return (Camera) camera.clone();
         }

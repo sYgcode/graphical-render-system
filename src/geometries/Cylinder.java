@@ -32,8 +32,7 @@ public class Cylinder extends Tube{
     public Vector getNormal(Point point){
         Point p0 = axis.head;
         Vector v = axis.direction;
-        double t = 0
-                ;
+        double t = 0;
         //check tube BVA P-p0
         try {
             t = alignZero(point.subtract(p0).dotProduct(v));
