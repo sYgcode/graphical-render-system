@@ -5,7 +5,7 @@ import primitives.Ray;
 import scene.Scene;
 
 /**
- * abstract class
+ * abstract class Ray Tracer Base
  */
 public abstract class RayTracerBase {
     /** scene to trace ray in*/

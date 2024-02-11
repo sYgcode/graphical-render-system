@@ -93,8 +93,8 @@ public class Camera implements Cloneable {
         //get nx and ny from image writer
         int Nx = imageWriter.getNx();
         int Ny = imageWriter.getNy();
-        for(int i = 0; i < width; i++){
-            for(int j = 0; j < height; j++){
+        for(int i = 0; i < Nx; i++){
+            for(int j = 0; j < Ny; j++){
                 this.castRay(Nx, Ny, i, j);
             }
         }
@@ -109,8 +109,7 @@ public class Camera implements Cloneable {
      */
     private void castRay(int Nx, int Ny, int i, int j){
         Ray ray = constructRay(Nx, Ny, i, j);
-        Color color = rayTracer.traceRay(ray);
-        imageWriter.writePixel(i, j, color);
+        imageWriter.writePixel(i, j, rayTracer.traceRay(ray));
     }
 
     /**

@@ -20,14 +20,27 @@ public class ImageWriterTest {
                 .setRayTracer(new SimpleRayTracer(scene))
                 .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0,1,0))
                 .setVpDistance(100)
-                .setVpSize(500, 800);
+                .setVpSize(800, 500);
         Color color1 = new Color(255, 0, 0);
         Color color2 = new Color(java.awt.Color.YELLOW);
         scene.setBackground(color1);
+        ImageWriter imgWriter = new ImageWriter("first test", 800, 500);
         camera
-                .setImageWriter(new ImageWriter("first test", 500, 800));
+                .setImageWriter(imgWriter);
         camera.build().renderImage();
-        camera.build().printGrid(50, color2);
+        int i, j;
+        for(i=0; i<800; i+=50){
+            for(j=0; j<500; j++){
+                imgWriter.writePixel(i, j, color2);
+            }
+        }
+        for(j=0; j<500; j+=60){
+            for(i=0; i<800; i++){
+                imgWriter.writePixel(i, j, color2);
+            }
+        }
+        camera.setImageWriter(imgWriter);
+        camera.build();
         camera.build().writeToImage();
     }
 }
