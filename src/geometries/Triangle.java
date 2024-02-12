@@ -23,7 +23,7 @@ public class Triangle extends Polygon{
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray){
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray){
         // check with plane first
         List<Point> planeIntersections = plane.findIntersections(ray);
         if (planeIntersections == null)
@@ -46,10 +46,40 @@ public class Triangle extends Polygon{
         }
 
         if((a1 > 0 && a2 > 0 && a3 > 0) || (a1 < 0 && a2 < 0 && a3 < 0)){
-            return List.of(planeIntersections.getFirst());
+            return List.of(new GeoPoint(this, planeIntersections.getFirst()));
         }
 
         return null;
     }
+
+//    @Override
+//    public List<Point> findIntersections(Ray ray){
+//        // check with plane first
+//        List<Point> planeIntersections = plane.findIntersections(ray);
+//        if (planeIntersections == null)
+//            return null;
+//
+//        Point p0 = ray.head;
+//        Vector v = ray.direction;
+//
+//        Vector v1 = vertices.get(0).subtract(p0);
+//        Vector v2 = vertices.get(1).subtract(p0);
+//        Vector v3 = vertices.get(2).subtract(p0);
+//
+//        //crossproducts
+//        double a1 = alignZero(v.dotProduct(v1.crossProduct(v2)));
+//        double a2 = alignZero(v.dotProduct(v2.crossProduct(v3)));
+//        double a3 = alignZero(v.dotProduct(v3.crossProduct(v1)));
+//
+//        if(isZero(a1) || isZero(a2) || isZero(a3)){
+//            return null;
+//        }
+//
+//        if((a1 > 0 && a2 > 0 && a3 > 0) || (a1 < 0 && a2 < 0 && a3 < 0)){
+//            return List.of(planeIntersections.getFirst());
+//        }
+//
+//        return null;
+//    }
 
 }

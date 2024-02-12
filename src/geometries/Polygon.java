@@ -85,7 +85,7 @@ public class Polygon extends Geometry {
    public Vector getNormal(Point point) { return plane.getNormal(); }
 
    @Override
-   public List<Point> findIntersections(Ray ray){
+   public List<GeoPoint> findGeoIntersectionsHelper(Ray ray){
       // check with plane first
       List<Point> planeIntersections = plane.findIntersections(ray);
 
@@ -128,7 +128,53 @@ public class Polygon extends Geometry {
       }
       Point point = planeIntersections.getFirst();
 
-      return List.of(point);
+      return List.of(new GeoPoint(this,point));
    }
+//   @Override
+//   public List<Point> findIntersections(Ray ray){
+//      // check with plane first
+//      List<Point> planeIntersections = plane.findIntersections(ray);
+//
+//      //check if there are any intersections on the plane
+//      if (planeIntersections == null) {
+//         return null;
+//      }
+//
+//      // get head and dir
+//      Point P0 = ray.head;
+//      Vector v = ray.direction;
+//
+//      // get starting vectors like with triangle
+//      Vector v1 = P0.subtract(vertices.get(0));
+//      Vector v2 = P0.subtract(vertices.get(1));
+//
+//      double sign = alignZero(v.dotProduct(v2.crossProduct(v1)));
+//
+//      // in this case there are 0 points
+//      if (isZero(sign)) {
+//         return null;
+//      }
+//
+//      //beginning sign (positive/negative)
+//      boolean positive = sign > 0;
+//
+//      //iterate through all vertices of the polygon (start from 2 because we already did 0 and 1
+//      for (int i = 2; i < vertices.size(); i++) {
+//         v2 = v1;
+//         v1 = P0.subtract(vertices.get(i));
+//
+//         sign = alignZero(v.dotProduct(v2.crossProduct(v1)));
+//         if (isZero(sign)) {
+//            return null;
+//         }
+//
+//         if (positive != (sign > 0)) {
+//            return null;
+//         }
+//      }
+//      Point point = planeIntersections.getFirst();
+//
+//      return List.of(point);
+//   }
 
 }

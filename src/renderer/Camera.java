@@ -129,7 +129,6 @@ public class Camera implements Cloneable {
                 imageWriter.writePixel(i, j, color);
             }
         }
-
     }
 
     /**
