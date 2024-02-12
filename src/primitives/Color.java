@@ -111,6 +111,7 @@ public class Color {
       return new Color(rgb.reduce(k));
    }
 
+
    @Override
    public String toString() { return "rgb:" + rgb; }
 }

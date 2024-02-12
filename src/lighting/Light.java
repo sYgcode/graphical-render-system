@@ -17,7 +17,7 @@ abstract class Light {
         this.intensity = intensity;
     }
     /** returns intensity*/
-    Color getIntensity() {
+    public Color getIntensity() {
         return intensity;
     }
 }

@@ -1,6 +1,7 @@
 package geometries;
 
 import primitives.Color;
+import primitives.Material;
 import primitives.Point;
 import primitives.Vector;
 
@@ -10,6 +11,8 @@ import primitives.Vector;
 public abstract class Geometry extends Intersectable {
     /** emission of Geometry, init at Black*/
     protected Color emission = Color.BLACK;
+    /** represents material on geometry */
+    private Material material = new Material();
 
     /**
      * gets the emission field for the Geometry
@@ -20,6 +23,11 @@ public abstract class Geometry extends Intersectable {
     }
 
     /**
+     * gets the geometry's material
+     * @return the material
+     */
+    public Material getMaterial(){return material;}
+    /**
      * set the emission to something new
      * @param emission the new emission
      * @return this
@@ -29,6 +37,10 @@ public abstract class Geometry extends Intersectable {
         return this;
     }
 
+    public Geometry setMaterial(Material material){
+        this.material = material;
+        return this;
+    }
     /**
      * function to calculate normal (vertical) vector from the given point
      * @param point certain point on the surface of the object to calculate the normal from

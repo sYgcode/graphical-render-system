@@ -18,7 +18,7 @@ public class PointLight extends Light implements LightSource{
      * @param intensity init intensity
      * @param position init position
      */
-    PointLight(Color intensity, Point position){
+    public PointLight(Color intensity, Point position){
         super(intensity);
         this.position = position;
     }
@@ -28,7 +28,7 @@ public class PointLight extends Light implements LightSource{
      * @param kC new value
      * @return this
      */
-    public PointLight setkC(double kC) {
+    public PointLight setKc(double kC) {
         this.kC = kC;
         return this;
     }
@@ -37,7 +37,7 @@ public class PointLight extends Light implements LightSource{
      * @param kL new value
      * @return this
      */
-    public PointLight setkL(double kL) {
+    public PointLight setKl(double kL) {
         this.kL = kL;
         return this;
     }
@@ -46,7 +46,7 @@ public class PointLight extends Light implements LightSource{
      * @param kQ new value
      * @return this
      */
-    public PointLight setkQ(double kQ) {
+    public PointLight setKq(double kQ) {
         this.kQ = kQ;
         return this;
     }
@@ -59,6 +59,6 @@ public class PointLight extends Light implements LightSource{
 
     @Override
     public Vector getL(Point p){
-
+        return p.subtract(position).normalize();
     }
 }
