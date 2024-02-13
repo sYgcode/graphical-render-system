@@ -22,7 +22,7 @@ public class RenderTests {
       .setRayTracer(new SimpleRayTracer(scene))
       .setLocation(Point.ZERO).setDirection(new Vector(0, 0, -1), new Vector(0,1,0))
       .setVpDistance(100)
-      .setVpSize(500, 500);
+      .setVpSize(1000, 1000);
 
    /**
     * Produce a scene with basic 3D model and render it into a png image with a
