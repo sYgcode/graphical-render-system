@@ -1,6 +1,10 @@
 package geometries;
 
+import lighting.LightSource;
+import lighting.PointLight;
+import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -91,6 +95,15 @@ class PlaneTests {
         assertNull(plane.findIntersections(new Ray(new Point(0, 0.5, 0.5), new Vector(0,1,0))), "ERROR: plane has intersect when shouldn't");
         //TC17 Ray is neither orthogonal nor parallel but starts from Plane's Q point
         assertNull(plane.findIntersections(new Ray(new Point(0,0,1), new Vector(0,1,0))), "ERROR: plane has intersect when shouldn't");
+    }
+
+    /** tests max distance */
+    @Test
+    public void findGeoIntersections(){
+        Plane plane = new Plane(new Point(0, 0, 1), new Vector(1, 1, 1));
+        //TC intersect out of bounds
+        assertNull(plane.findGeoIntersections(new Ray(new Point(0, 0.5, 0.5), new Vector(0,1,-1)), 0.1), "ERROR: plane has intersect when out of bounds");
+
     }
 }
 

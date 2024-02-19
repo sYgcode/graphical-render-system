@@ -38,19 +38,20 @@ class SphereTests {
     private final Point p001 = new Point(0, 0, 1);
     private final Point p100 = new Point(1, 0, 0);
     private final Vector v001 = new Vector(0, 0, 1);
+
+    Sphere sphere = new Sphere(p100, 1d);
+    final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
+    final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
+    final Vector v310 = new Vector(3, 1, 0);
+    final Vector v110 = new Vector(1, 1, 0);
+    final Point p01 = new Point(-1, 0, 0);
+    final Point p02 = new Point(0.5, 0.5, 0);
     /**
      * Test method for {@link geometries.Sphere#findIntersections(primitives.Ray)}.
      */
     @Test
     public void testFindIntersections() {
-        Sphere sphere = new Sphere(p100, 1d);
-        final Point gp1 = new Point(0.0651530771650466, 0.355051025721682, 0);
-        final Point gp2 = new Point(1.53484692283495, 0.844948974278318, 0);
         final var exp = List.of(gp1, gp2);
-        final Vector v310 = new Vector(3, 1, 0);
-        final Vector v110 = new Vector(1, 1, 0);
-        final Point p01 = new Point(-1, 0, 0);
-        final Point p02 = new Point(0.5, 0.5, 0);
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray's line is outside the sphere (0 points)
         assertNull(sphere.findIntersections(new Ray(p01, v110)), "Ray's line out of sphere");
@@ -103,5 +104,19 @@ class SphereTests {
         // **** Group: Special cases
         // TC22: Ray's line is outside, ray is orthogonal to ray start to sphere's center line
         assertNull(sphere.findIntersections(new Ray(new Point(-1,0,0), new Vector(0,1,0))), "ERROR: wrong point when orthogonal to center");
+    }
+
+    /**
+     * Test method for {@link geometries.Sphere#findGeoIntersections(primitives.Ray, double)}.
+     */
+    @Test
+    public void findGeoIntersections(){
+        Sphere sphere = new Sphere(p100, 1d);
+        List<Intersectable.GeoPoint> result = sphere.findGeoIntersections(new Ray(p01, v310), 0.5);
+        //TC01 max distance before sphere
+        assertNull(result, "Wrong number of points for out of bound check");
+        //TC02 max distance in middle of sphere
+        result = sphere.findGeoIntersections(new Ray(p01, v310), 1.5);
+        assertEquals(1, result.size(), "Wrong number of points for out of bound check");
     }
 }

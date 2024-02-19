@@ -32,4 +32,9 @@ public class DirectionalLight extends Light implements LightSource{
         //with directional light it is the same as the directionS
         return direction.normalize();
     }
+
+    @Override
+    public double getDistance(Point p){
+        return Double.POSITIVE_INFINITY;
+    }
 }

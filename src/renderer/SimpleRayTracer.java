@@ -15,12 +15,34 @@ import static primitives.Util.alignZero;
  * class inheriting class
  */
 public class SimpleRayTracer extends RayTracerBase{
+    /** amount to move ray's head when calculating shadows */
+    private static final double DELTA = 0.1;
+
     /**
      * sets passed scene to scene
      * @param scene scene passed
      */
     public SimpleRayTracer(Scene scene){
         super(scene);
+    }
+
+    /**
+     * checks if a point is shaded or not
+     * @param gp geo point to check
+     * @param l direction vector of light to point
+     * @param n normal of point
+     * @param lightSource light source to check for
+     * @return true if unshaded
+     */
+    private boolean unshaded(GeoPoint gp, Vector l, Vector n, LightSource lightSource) {
+        Vector lightDirection = l.scale(-1); // from point to light source
+
+        Vector delta = n.scale(n.dotProduct(lightDirection) > 0 ? DELTA : -DELTA);
+        Point pointRay = gp.point.add(delta);
+
+        Ray ray= new Ray(pointRay, lightDirection);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray, lightSource.getDistance(pointRay));
+        return (intersections == null);
     }
 
     /**
@@ -60,7 +82,7 @@ public class SimpleRayTracer extends RayTracerBase{
             Vector l = lightSource.getL(point);
             //lI*n
             double nl= alignZero(n.dotProduct(l));
-            if (nl* nv> 0) {
+            if ((nl* nv> 0) && unshaded(gp, l, n, lightSource)){
                 // sign(nl) == sign(nv)
                 Color iL= lightSource.getIntensity(point);
                 // +iLi * (kD*abs(lI*n)+kS*(max(0, -v*r))^nSh)

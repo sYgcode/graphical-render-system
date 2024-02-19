@@ -85,9 +85,9 @@ public class Polygon extends Geometry {
    public Vector getNormal(Point point) { return plane.getNormal(); }
 
    @Override
-   public List<GeoPoint> findGeoIntersectionsHelper(Ray ray){
+   public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance){
       // check with plane first
-      List<Point> planeIntersections = plane.findIntersections(ray);
+      List<GeoPoint> planeIntersections = plane.findGeoIntersections(ray, maxDistance);
 
       //check if there are any intersections on the plane
       if (planeIntersections == null) {
@@ -109,6 +109,7 @@ public class Polygon extends Geometry {
          return null;
       }
 
+
       //beginning sign (positive/negative)
       boolean positive = sign > 0;
 
@@ -122,13 +123,14 @@ public class Polygon extends Geometry {
             return null;
          }
 
+
          if (positive != (sign > 0)) {
             return null;
          }
       }
-      Point point = planeIntersections.getFirst();
+      GeoPoint point = planeIntersections.getFirst();
 
-      return List.of(new GeoPoint(this,point));
+      return List.of(new GeoPoint(this, point.point));
    }
 //   @Override
 //   public List<Point> findIntersections(Ray ray){

@@ -34,6 +34,14 @@ class TriangleTests {
 
     }
 
+    /** tests max distance */
+    @Test
+    public void testFindGeoIntersections(){
+        Triangle triangle = new Triangle(new Point(1, 0, 0), new Point(0, 1, 0), new Point(0, 0, 1));
+        //TC01 out of bounds check
+        assertNull(triangle.findGeoIntersections(new Ray(new Point(1,1,1), new Vector(-1,-1,-1)), 0.1), "ERROR: bad intersect for max distance");
+    }
+
     /** Test method for {@link Triangle#findIntersections(primitives.Ray)}. */
     @Test
     public void testFindIntersections() {
