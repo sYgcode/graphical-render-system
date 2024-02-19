@@ -13,6 +13,9 @@ public class PointLight extends Light implements LightSource{
     /** representing attenuation attributes*/
     private double kC = 1, kL = 0, kQ = 0;
 
+    /** allows us to narrow beam*/
+    protected double narrowBeam = 1;
+
     /**
      * constructor inits Point Light's fields
      * @param intensity init intensity
@@ -48,6 +51,16 @@ public class PointLight extends Light implements LightSource{
      */
     public PointLight setKq(double kQ) {
         this.kQ = kQ;
+        return this;
+    }
+
+    /**
+     * sets narrow beam number
+     * @param narrowBeam new narrow beam
+     * @return this
+     */
+    public PointLight setNarrowBeam(double narrowBeam){
+        this.narrowBeam = narrowBeam;
         return this;
     }
 

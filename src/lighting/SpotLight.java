@@ -11,6 +11,7 @@ public class SpotLight extends PointLight{
     /** represents direction of light. */
     private Vector direction;
 
+
     /**
      * constructor to init Point Light's fields
      * @param intensity init intensity
@@ -38,9 +39,13 @@ public class SpotLight extends PointLight{
         return this;
     }
 
+
     @Override
     public Color getIntensity(Point p){
+        double projection = direction.normalize().dotProduct(getL(p));
+        double factor = Math.max(0, projection);
+        factor = Math.pow(factor, narrowBeam);
         // I0*max(0, dir*l/(kC + kL) * d + kQ * d^2
-        return super.getIntensity(p).scale(Math.max(0, direction.normalize().dotProduct(getL(p))));
+        return super.getIntensity(p).scale(factor);
     }
 }

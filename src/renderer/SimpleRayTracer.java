@@ -1,5 +1,6 @@
 package renderer;
 
+import geometries.Geometry;
 import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
@@ -40,25 +41,31 @@ public class SimpleRayTracer extends RayTracerBase{
      * @return Local Effect
      */
     private Color calcLocalEffects(GeoPoint gp, Ray ray) {
+        //less access time
+        Geometry geometry = gp.geometry;
+        Point point = gp.point;
+        Color intensity;
         // +iE
-        Color color= gp.geometry.getEmission();
-        Vector n = gp.geometry.getNormal(gp.point);
-        Vector v = ray.direction;
+        Color color = geometry.getEmission();
+        Vector n = geometry.getNormal(gp.point);
+        Vector v = ray.direction.normalize();
         double nv= alignZero(n.dotProduct(v));
         if (nv== 0)
             return color;
-        Material material = gp.geometry.getMaterial();
+        Material material = geometry.getMaterial();
         //sum((kD*abs(lI*n)+kS*(max(0, -v*r))^nSh)*iLi)
         for (LightSource lightSource: scene.lights) {
-            Vector l = lightSource.getL(gp.point);
+            //less access time
+            intensity = lightSource.getIntensity(point);
+            Vector l = lightSource.getL(point);
             //lI*n
             double nl= alignZero(n.dotProduct(l));
             if (nl* nv> 0) {
                 // sign(nl) == sign(nv)
-                Color iL= lightSource.getIntensity(gp.point);
+                Color iL= lightSource.getIntensity(point);
                 // +iLi * (kD*abs(lI*n)+kS*(max(0, -v*r))^nSh)
-                color = color.add(iL.scale(calcDiffusive(material, nl, lightSource.getIntensity(gp.point))
-                        .add(calcSpecular(material, n, l, nl, v, lightSource.getIntensity(gp.point)))));
+                color = color.add(iL.scale(calcDiffusive(material.kD, nl, intensity)
+                        .add(calcSpecular(material.kS, material.nShininess, n, l, nl, v, intensity))));
             }
         }
         return color;
@@ -66,18 +73,19 @@ public class SimpleRayTracer extends RayTracerBase{
 
     /**
      * calculates the diffusive. ((kD*abs(lI*n))
-     * @param material material of geometry
+     * @param kD kD of material of geometry so as to save time by not sending all of Material
      * @param nl dot product between normal and L
      * @param intensity intensity at the point we are calculating
      * @return Diffusive
      */
-    private Double3 calcDiffusive(Material material, double nl, Color intensity){
-        return material.kD.scale(Math.abs(nl));
+    private Double3 calcDiffusive(Double3 kD, double nl, Color intensity){
+        return kD.scale(Math.abs(nl));
     }
 
     /**
      * calculates the specular. (kS*(max(0, -v*r))^nSh)
-     * @param material material of geometry
+     * @param kS kD of material of geometry so as to save time by not sending all of Material
+     * @param nShininess integer to represent shininess
      * @param n normal from point
      * @param l our L from point to light
      * @param nl dot product between normal and L
@@ -85,14 +93,9 @@ public class SimpleRayTracer extends RayTracerBase{
      * @param intensity intensity of light at the point we are calculating for
      * @return Specular
      */
-    private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v, Color intensity){
+    private Double3 calcSpecular(Double3 kS, int nShininess, Vector n, Vector l, double nl, Vector v, Color intensity){
         // kS*(max(0, -v*r))
-        Double3 specular = material.kS.scale(Math.max(0, v.scale(-1).dotProduct(calcReflection(l, n, nl))));
-        // ^nShininess
-        for(int i = 0; i < material.nShininess; i++){
-            specular = specular.product(specular);
-        }
-        return specular;
+        return kS.scale(Math.pow(Math.max(0, v.scale(-1).dotProduct(calcReflection(l, n, nl))),nShininess));
     }
 
     /**
@@ -103,7 +106,7 @@ public class SimpleRayTracer extends RayTracerBase{
      * @return Relection Vector
      */
     private Vector calcReflection(Vector l, Vector n, double nl){
-        return l.subtract(n.scale(nl*2));
+        return l.subtract(n.scale(nl*2)).normalize();
     }
 
     @Override
