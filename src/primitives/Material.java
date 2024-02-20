@@ -4,8 +4,15 @@ package primitives;
  * class representing a Material
  */
 public class Material {
-    /**Double3's to represent attenuation attributes */
-    public Double3 kD = Double3.ZERO, kS = Double3.ZERO;
+    /** Diffusive coefficient */
+    public Double3 kD = Double3.ZERO;
+    /** Specular coefficient */
+    public Double3 kS = Double3.ZERO;
+    /** transparency coefficient */
+    public Double3 kT = Double3.ZERO;
+    /** reflection coefficient */
+    public Double3 kR = Double3.ZERO;
+
     //hw page says init at 0, presentation says 1
     /** represents how concentrated the shininess is*/
     public int nShininess = 1;
@@ -54,6 +61,46 @@ public class Material {
      */
     public Material setShininess(int nShininess){
         this.nShininess = nShininess;
+        return this;
+    }
+
+    /**
+     * sets transparency coefficient
+     * @param kT new value
+     * @return this
+     */
+    public Material setKt(Double3 kT){
+        this.kT = kT;
+        return this;
+    }
+
+    /**
+     * sets transparency coefficient
+     * @param kT new value
+     * @return this
+     */
+    public Material setKt(double kT){
+        this.kT = new Double3(kT);
+        return this;
+    }
+
+    /**
+     * sets reflection coefficient
+     * @param kR new value
+     * @return this
+     */
+    public Material setKr(Double3 kR){
+        this.kR = kR;
+        return this;
+    }
+
+    /**
+     * sets reflection coefficient
+     * @param kR new value
+     * @return this
+     */
+    public Material setKr(double kR){
+        this.kR = new Double3(kR);
         return this;
     }
 }

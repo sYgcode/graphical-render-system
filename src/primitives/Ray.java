@@ -8,6 +8,9 @@ import geometries.Intersectable.GeoPoint;
  * @author Yishua Golubtchik & Yair Yahav
  */
 public class Ray {
+    /** amount to move ray's head when calculating shadows */
+    private static final double DELTA = 0.1;
+
     /**
      * Point representing the head of the ray
      */
@@ -27,6 +30,25 @@ public class Ray {
         // there is no reason to check if the vector is already normalized due to the low probability
         // of the vector already being normalized and each check costs the runtime to check the length.
         this.direction = direction.normalize();
+    }
+
+    /**
+     * Constructor for ray deflected by DELTA
+     * @param head origin
+     * @param n normal vector
+     * @param dir direction
+     */
+    public Ray(Point head, Vector n, Vector dir) {
+        this.direction = dir.normalize();
+        double nv = alignZero(n.dotProduct(this.direction));
+        Vector delta  =n.scale(DELTA);
+        if (nv<0)
+            delta = delta.scale(-1);
+        if(isZero(nv)){
+            this.head = head;
+        }
+        else
+            this.head = head.add(delta);
     }
 
     @Override
