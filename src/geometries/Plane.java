@@ -28,7 +28,7 @@ public class Plane extends Geometry{
      * @param p2 point 2
      * @param p3 point 3
      */
-    protected Plane(Point p1,Point p2,Point p3){
+    public Plane(Point p1, Point p2, Point p3){
         q = p1;
         normal = (p2.subtract(p1)).crossProduct(p3.subtract(p1)).normalize();
     }

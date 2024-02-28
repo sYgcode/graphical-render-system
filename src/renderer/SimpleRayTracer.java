@@ -104,7 +104,9 @@ public class SimpleRayTracer extends RayTracerBase{
      * @param ray to help with phong
      * @return Color at point
      */
-    private Color calcColor(GeoPoint gp, Ray ray) { return calcColor(gp, ray, MAX_CALC_COLOR_LEVEL, INITIAL_K).add(scene.ambientLight.getIntensity()); }
+    private Color calcColor(GeoPoint gp, Ray ray) {
+        return calcColor(gp, ray, MAX_CALC_COLOR_LEVEL, INITIAL_K).add(scene.ambientLight.getIntensity());
+    }
     /**
      * calculate color at given point using phong (kA*iA(iE + sum((kD*abs(lI*n)+kS*(max(0, -v*r))^nSh)*iLi)))
      * @param gp point to calculate at
@@ -221,7 +223,7 @@ public class SimpleRayTracer extends RayTracerBase{
             Vector l = lightSource.getL(point);
             //lI*n
             double nl= alignZero(n.dotProduct(l));
-            if ((nl* nv> 0) && unshaded(gp, l, n, lightSource)){
+            if (nl* nv> 0) {
                 // sign(nl) == sign(nv)
                 Double3 ktr = transparency(lightSource, l, n, gp);
                 if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
