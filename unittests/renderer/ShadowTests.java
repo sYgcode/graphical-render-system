@@ -138,6 +138,47 @@ public class ShadowTests {
               .build()
               .renderImage();
       camera.build().writeToImage();
+
+      camera.setImageWriter(new ImageWriter("final7-a174", 600, 600))//.setDensity(17)
+              .build()
+              .renderImage();
+      camera.build().writeToImage();
+   }
+
+   @Test
+   public void miniProject1(){
+      scene.geometries.add(new Polygon(new Point(0, 0, 0), new Point(20, 20, 0), new Point(0, 40, 0)).setEmission(new Color(75,0,130))
+              .setMaterial(new Material().setShininess(10).setKt(0.001).setKs(0.02)),
+              new Sphere(new Point (-40, 0, 300), 40).setMaterial(new Material().setShininess(20).setKt(0.5)).setEmission(new Color(BLUE)),
+              new Plane(new Point(-50,0,-50), new Vector(0,0,1)).setMaterial(new Material().setShininess(20).setKr(0.7)));
+      scene.geometries.add(
+              new Plane(new Point(-150, -150, -115), new Point(150, -150, -135),
+                      new Point(75, 75, -150)).setEmission(new Color(75,0,130)) //
+
+                      .setMaterial(new Material().setKs(0.8).setKr(0.8).setShininess(60)), //
+              new Sphere(new Point(-40, 0, -11), 20d) //
+                      .setEmission(new Color(GREEN)) //
+                      .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)),
+              new Sphere(new Point(0, 1, -11), 20d) //
+                      .setEmission(new Color(YELLOW)) //
+                      .setMaterial(new Material().setKd(0.2).setKs(0.6).setKt(0.6).setShininess(30)),
+              new Sphere(new Point(40, 2, -11), 20d) //
+                      .setEmission(new Color(RED)) //
+                      .setMaterial(new Material().setKd(0.4).setKs(0.3).setKt(0.9).setShininess(20)),
+              new Polygon(new Point(40, 30, 200), new Point(60, 30, 200), new Point(70, 40, 200), new Point(70, 60, 200), new Point(40, 60, 200))
+                      .setMaterial(new Material().setKd(0.2).setKs(0.6).setShininess(30)).setEmission(new Color(GREEN)),
+              new Triangle(new Point(100, -50, 300), new Point(50,-50,350), new Point(0,0,400)).setMaterial(new Material().setKd(0.2).setKs(0.01).setKt(0.6).setShininess(15)).setEmission(new Color(YELLOW)));
+      scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
+      scene.lights.add(
+              new SpotLight(new Color(700, 400, 400), new Point(0, 30, 115), new Vector(-1, -1, -4)) //
+                      .setKl(4E-4).setKq(2E-5));
+      scene.lights.add(new PointLight(new Color(500, 400, 400), new Point(80, 40, 115)) //
+              .setKl(4E-4).setKq(2E-5));
+      scene.lights.add(new DirectionalLight(new Color(500, 350, 800), new Vector(1,1,0.5)));
+      camera.setImageWriter(new ImageWriter("miniP3_2", 600, 600)).setDensity(9)
+              .build()
+              .renderImage();
+      camera.build().writeToImage();
    }
 
 }

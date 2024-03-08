@@ -43,7 +43,7 @@ public class IntegrationTests {
         //loop through all pixels
         for(int i = 0; i < nY; i++){
             for(int j = 0; j < nX; j++){
-                intersectList = geometry.findIntersections(cam.constructRay(nX, nY, j, i));
+                intersectList = geometry.findIntersections(cam.constructRay(nX, nY, j, i).getFirst());
                 if(intersectList != null){counter += intersectList.size();}
 
             }
