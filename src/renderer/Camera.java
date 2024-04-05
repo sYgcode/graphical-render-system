@@ -8,6 +8,7 @@ import primitives.Vector;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.stream.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -16,6 +17,21 @@ import static primitives.Util.isZero;
  * Class for camera
  */
 public class Camera implements Cloneable {
+
+    /** Pixel manager for supporting:
+     * <ul>
+     * <li>multi-threading</li>
+     * <li>debug print of progress percentage in Console window/tab</li>
+     * <ul>     */
+    private PixelManager pixelManager;
+
+    /** how many threads to create */
+    private int threadsCount = 0; // -2 auto, -1 range/stream, 0 no threads, 1+ number of threads
+    /** spare threads in case of all cores */
+    private final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
+    /** print interval for percentage */
+    private double printInterval = 0;    // printing progress percentage interval
+
     /**
      * Point representing Camera location.
      */
@@ -109,13 +125,33 @@ public class Camera implements Cloneable {
     /**
      * renders image
      */
-    public void renderImage(){
+    public void renderImage() {
         //get nx and ny from image writer
         int Nx = imageWriter.getNx();
         int Ny = imageWriter.getNy();
-        for(int i = 0; i < Nx; i++){
-            for(int j = 0; j < Ny; j++){
-                this.castRay(Nx, Ny, i, j);
+
+        pixelManager = new PixelManager(Ny, Nx, printInterval);
+
+        if (threadsCount == 0) {
+            for (int i = 0; i < Nx; i++) {
+                for (int j = 0; j < Ny; j++) {
+                    this.castRay(Nx, Ny, i, j);
+                }
+            }
+        } else if (threadsCount == -1) {
+            IntStream.range(0, Ny).parallel()   //
+                    .forEach(i -> IntStream.range(0, Nx).parallel() //
+                            .forEach(j -> castRay(Nx, Ny, j, i)));
+        } else {
+            var threads = new LinkedList<Thread>();
+            while (threadsCount-- > 0) threads.add(new Thread(() -> {
+                PixelManager.Pixel pixel;
+                while ((pixel = pixelManager.nextPixel()) != null) castRay(Nx, Ny, pixel.col(), pixel.row());
+            }));
+            for (var thread : threads) thread.start();
+            try {
+                for (var thread : threads) thread.join();
+            } catch (InterruptedException ignore) {
             }
         }
     }
@@ -144,6 +180,7 @@ public class Camera implements Cloneable {
     private void castRay(int Nx, int Ny, int i, int j){
         List<Ray> rays = constructRay(Nx, Ny, i, j);
         imageWriter.writePixel(i, j, calcAvgColor(rays));
+        pixelManager.pixelDone();
     }
 
     /**
@@ -265,6 +302,31 @@ public class Camera implements Cloneable {
          */
         public Builder setDensity(int density){
             camera.density = density;
+            return this;
+        }
+
+        /**
+         * sets multithreading amount
+         * @param threads amount of threads
+         * @return this
+         */
+        public Builder setMultithreading(int threads) {
+            if (threads < -2) throw new IllegalArgumentException("Multithreading must be -2 or higher");
+            if (threads >= -1) camera.threadsCount = threads;
+            else { // == -2
+                int cores = Runtime.getRuntime().availableProcessors() - camera.SPARE_THREADS;
+                camera.threadsCount = cores <= 2 ? 1 : cores;
+            }
+            return this;
+        }
+
+        /**
+         * progress bar, only works in Eclipse
+         * @param interval how often should it update
+         * @return this
+         */
+        public Builder setDebugPrint(double interval) {
+            camera.printInterval = interval;
             return this;
         }
 
