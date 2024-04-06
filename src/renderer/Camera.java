@@ -54,6 +54,8 @@ public class Camera implements Cloneable {
     private RayTracerBase rayTracer;
     /** density of rays, represented by square root of actual density */
     private int density = 1;
+    /** if at 0, supersampling is disabled. if higher then it represents recursion depth*/
+    private int superSampling = 0;
     /** blackboard to use for each pixel*/
     private Blackboard blackboard;
 
@@ -105,7 +107,7 @@ public class Camera implements Cloneable {
         if(xJ != 0) { Pij = Pij.add(Vright.scale(xJ));}
         if(yI != 0) { Pij = Pij.add(Vup.scale(yI));}
 
-        if(blackboard.getDensity() !=1){
+        if(blackboard.getDensity() != 1){
             //set center point to center of pixel and set width and height
             blackboard = blackboard.setCenterPoint(Pij).setWidth(Rx).setHeight(Ry);
             // generate list of points on grid
@@ -116,8 +118,7 @@ public class Camera implements Cloneable {
             }
         }
         else {
-            Vector Vij = Pij.subtract(loc);
-            rays.add(new Ray(loc, Vij));
+            rays.add(new Ray(loc, Pij.subtract(loc)));
         }
         return rays;
     }
@@ -178,10 +179,79 @@ public class Camera implements Cloneable {
      * @param j index of row
      */
     private void castRay(int Nx, int Ny, int i, int j){
-        List<Ray> rays = constructRay(Nx, Ny, i, j);
-        imageWriter.writePixel(i, j, calcAvgColor(rays));
+        if (superSampling > 0){
+            imageWriter.writePixel(i, j, constructRayAccelerator(Nx, Ny, j, i));
+        }
+        else{
+            imageWriter.writePixel(i, j, calcAvgColor(constructRay(Nx, Ny, j, i)));
+        }
         pixelManager.pixelDone();
+
+
     }
+
+    /**
+     * calculates Color of pixel using adaptive supersampling
+     * @param Nx number of columns
+     * @param Ny number of rows
+     * @param i pixel index we are on
+     * @param j pixel index we are on
+     */
+    private Color constructRayAccelerator(int Nx, int Ny, int j, int i){
+        //Image Center
+
+        //Ratio width and height
+        double Ry = height/Ny;
+        double Rx = width/Nx;
+
+        //Pixel[i,j] center
+        double yI = -(i-(Ny-1)/2.0)*Ry;
+        double xJ = (j-(Nx-1)/2.0)*Rx;
+        Point Pij = viewPlaneCenter;
+        //make sure to account for Vector ZERO
+        if(xJ != 0) { Pij = Pij.add(Vright.scale(xJ));}
+        if(yI != 0) { Pij = Pij.add(Vup.scale(yI));}
+
+        Blackboard blackboard1 = new Blackboard(Vup, Vright, 1);
+        return constructRayAcceleratorHelper(Pij, Rx, Ry, superSampling, blackboard1, Color.BLACK);
+    }
+
+    /**
+     * assisting function for supersampling, calculates color
+     * @param Pij center point of target area
+     * @param Rx width of target area
+     * @param Ry height of target area
+     * @param depth recursive max depth
+     * @param blackboard1 blackboard item, used to optimize creation of objects
+     * @param color color to average with
+     * @return final pixel color
+     */
+    private Color constructRayAcceleratorHelper(Point Pij, double Rx, double Ry, int depth, Blackboard blackboard1, Color color){
+        blackboard1 = blackboard1.setCenterPoint(Pij).setWidth(Rx).setHeight(Ry);
+        List<Point> points = blackboard1.generateGrid();
+        List<Ray> rays = new LinkedList<>();
+        for(Point point : points){
+            //rays to point on grid
+            rays.add(new Ray(loc, point.subtract(loc)));
+        }
+        Color avgColor = calcAvgColor(rays);
+
+        Color color0 = rayTracer.traceRay(rays.getFirst());
+        if(color0.equalsMarg(avgColor)|| depth < 1){
+            if(color.equals(Color.BLACK))
+                color = color.add(avgColor);
+            else
+                color = color.add(avgColor).reduce(2);
+
+            return color;
+        }
+        color = constructRayAcceleratorHelper(Pij.add(Vright.scale(-0.25*Rx)).add(Vup.scale(0.25*Ry)), Rx/2d, Ry/2d, (depth-1), blackboard1, color);
+        color = constructRayAcceleratorHelper(Pij.add(Vright.scale(0.25*Rx)).add(Vup.scale(0.25*Ry)), Rx/2d, Ry/2d, (depth-1), blackboard1, color);
+        color = constructRayAcceleratorHelper(Pij.add(Vright.scale(0.25*Rx)).add(Vup.scale(-0.25*Ry)), Rx/2d, Ry/2d, (depth-1), blackboard1, color);
+        color = constructRayAcceleratorHelper(Pij.add(Vright.scale(-0.25*Rx)).add(Vup.scale(-0.25*Ry)), Rx/2d, Ry/2d, (depth-1), blackboard1, color);
+        return color;
+    }
+
 
     /**
      * creates a grid for the image writer
@@ -301,7 +371,18 @@ public class Camera implements Cloneable {
          * @return this
          */
         public Builder setDensity(int density){
+            if(camera.density < 1){throw new IllegalArgumentException("Density is invalid, must be bigger then 1");}
             camera.density = density;
+            return this;
+        }
+
+        /**
+         * enables supersampling on the condition that density is already defined, otherwise remains disabled
+         * @return this
+         */
+        public Builder setSuperSampling(){
+            // calculates recursion depth by rounding as if we would scan the whole pixel as opposed to just parts of it
+            camera.superSampling = (int)(Math.log(camera.density)/Math.log(2));
             return this;
         }
 

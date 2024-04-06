@@ -113,5 +113,21 @@ public class Color {
 
 
    @Override
+   public boolean equals(Object obj) {
+      if (this == obj) return true;
+      return (obj instanceof Color other)
+              && this.rgb.equals(other.rgb);
+   }
+
+   /**
+    * checks if colors are equal with a small margin since the human eye can't tell the difference
+    * @param color
+    * @return
+    */
+   public boolean equalsMarg(Color color){
+      return (color.rgb.subtract(rgb).lowerThan(1));
+   }
+
+   @Override
    public String toString() { return "rgb:" + rgb; }
 }

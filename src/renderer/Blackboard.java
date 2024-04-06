@@ -91,15 +91,40 @@ public class Blackboard {
         //bring our point up to the corner
         Point topleft = p0.add(Vright.scale(-0.5*width)).add(Vup.scale(0.5*height));
         Point p;
-        for(int j = 0; j < density; j++){
+        for(int j = 0; j <= density; j++){
             p = topleft;
             //deal with vector zero
             if(!isZero(j)) {
                 p = p.add(Vright.scale(dX*j));
             }
-            for(int i = 0; i < density; i++){
+            for(int i = 0; i <= density; i++){
                 if(!isZero(i)) {
                     p = p.add(Vup.scale((-dY)+random(-0.1*dX, 0.1*dX)).add(Vright.scale(random(-0.1*dY, 0.1*dY))));
+                }
+                points.add(p);
+            }
+        }
+        return points;
+    }
+
+    /**
+     * generate grid without jitter
+     * @return a list of all points in grid
+     */
+    public List<Point> generateGrid(){
+        List<Point> points = new LinkedList<>();
+        //bring our point up to the corner
+        Point topleft = p0.add(Vright.scale(-0.5*width)).add(Vup.scale(0.5*height));
+        Point p;
+        for(int j = 0; j <= density; j++){
+            p = topleft;
+            //deal with vector zero
+            if(!isZero(j)) {
+                p = p.add(Vright.scale(dX*j));
+            }
+            for(int i = 0; i <= density; i++){
+                if(!isZero(i)) {
+                    p = p.add(Vup.scale((-dY)));
                 }
                 points.add(p);
             }

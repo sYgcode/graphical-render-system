@@ -21,11 +21,11 @@ import scene.Scene;
  * @author Dan
  */
 public class TeapotTest {
-	private final ImageWriter imageWriter = new ImageWriter("teapot", 800, 800);
+	private final ImageWriter imageWriter = new ImageWriter("teapot-AA-SS", 800, 800);
 
 	private final Camera.Builder builder = new Camera.Builder().setLocation(new Point(0, 0, -1000)).setDirection(new Vector(0, 0, 1), new Vector(0, 1, 0)) //
 			.setVpDistance(1000).setVpSize(200, 200) //
-			.setImageWriter(imageWriter); //
+			.setImageWriter(imageWriter).setDensity(17).setSuperSampling(); //
 			//.setMultithreading(3).setDebugPrint(0.1);
 
 	private final Scene scene = new Scene("Test scene");
